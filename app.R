@@ -90,7 +90,9 @@ ui <- fluidPage(
                                   our variables are. You can also select two variables and calculate their correlation coefficient."),
                                 p("The",span("Predicted Prices",style='color:blue'),"tab allows you to explore the independent variables and see their coefficients."),
                                 p("",span("Explore the Dataset",style='color:blue'),"gives you an opportuntiy to dynamically explore the dataset underlying this analysis."),
-                                p("Finally",span("The Math Behind Regression",style='color:blue'),"tab provides an overview of the mathematical principles of linear regression."),
+                                p("",span("The Math Behind Regression",style='color:blue'),"tab provides an overview of the mathematical principles of linear regression."),
+                                p('Finally, the',span("Variable definitions", style = "color:blue"), "allows you to explore each variable and understand the specific definition
+                                  as provided from the original source."),
                                 
                                 br(),
                                 ),
@@ -136,13 +138,16 @@ ui <- fluidPage(
             tabPanel("Predict Prices",
                      tabname="predict",
                      icon=icon("layer-group"),
-                     fluidRow(
-                      column(8,
+                     fluidPage(theme=shinytheme("readable"),
+                       fluidRow(
+                         column(8,
+                     p('The Adjusted R-squared of our model = 92.8% which means that our model explains 92.8% of
+                     the variance in our sale sprice is explained by the independent variables in our model.'),
                      plotOutput('predict'),
                      DT::DTOutput('coefficients')
                      
                      
-            ))),
+            )))),
             
             tabPanel("Explore The Data",
                      tabname="predict",
@@ -153,7 +158,7 @@ ui <- fluidPage(
             tabPanel("The Math Behind Regression",
                      tabname="regression",
                      icon=icon("calculator"),
-                     p(strong("A Brief Overview of Linear Regression")),
+                     p(strong("An Overview of Linear Regression")),
                                 p("Linear Regression, specifically multivariate linear regression, is used to predict a dependent variable,
                                 in our case Sale Price of a property, using independent variables that we already know – like square footage
                                 of the lot or the number of full bathrooms. The output of regression is an equation of the
@@ -172,16 +177,22 @@ ui <- fluidPage(
                                 variables to work with in linear regression are continuous. The more challenging variable type to work with is Not only
                                 are we trying to calculate sale price of a home, we also want to determine the coefficients/weights associated with each independent variable
                                 as well as the function's intercept. You can explore these coefficients on the Predict Prices tab."),
-                                strong('')
+                                strong('Understanding the quality of our model'),
+                                p('The quality of this model is good with an adjusted R-squared = 92.8%')
+            ),
                      
-                                
-                                
+                     
+                  tabPanel("Variable Definitions",
+                         tabname="define",
+                         icon=icon("book"),
+                         DT::DTOutput('define')),             
+                            
                         
                   
                      
                      
             )
-        ))
+        )
 # Define server logic 
 server <- function(input, output){
   #output for scatterplot on Exploratory analysis tab
@@ -211,6 +222,7 @@ server <- function(input, output){
   output$mytable <- DT::renderDT({df2
     })
    
+  output$define <- DT::renderDT({desc_df})
   }
   
 
